@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "20811097061",
+    "project_id": "kyoto-express-71566",
+    "storage_bucket": "kyoto-express-71566.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20811097061:android:853eef1fe68b04262d850c",
+        "android_client_info": {
+          "package_name": "com.example.kyoto_express"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20811097061-eq66eu9dkb9vd9a88td316h33ak6icij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtG-RuqXwd6ol2kRENdfV1RpoNgXWcbsg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "20811097061-eq66eu9dkb9vd9a88td316h33ak6icij.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "20811097061-tkccdov4i0dhi7acgbkahbonn8vpc54m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.kyotoExpress"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
