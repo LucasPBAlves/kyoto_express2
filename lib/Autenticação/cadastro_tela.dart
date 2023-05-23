@@ -1,5 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cryptography_flutter/cryptography_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
+
 class CadastroPage extends StatefulWidget {
   const CadastroPage({Key? key}) : super(key: key);
 
@@ -190,8 +195,10 @@ class CadastroPageState extends State<CadastroPage> {
     );
   }
 
-  void setData(String cpfController, String emailController, String adressController, String nameController, String passwordController, String phoneController) {
+  void setData (String cpfController, String emailController, String adressController, String nameController, String passwordController, String phoneController) {
+
     var db = FirebaseFirestore.instance;
+
     // Add a new document with a generated ID
     db
         .collection("users")
@@ -202,8 +209,11 @@ class CadastroPageState extends State<CadastroPage> {
       "Nome": nameController,
       "Senha": passwordController,
       "Telefone": phoneController,
+    }).then((DocumentReference doc) async{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('userDocumentId', doc.id);
     });
 
-        //.then((DocumentReference doc) => print('DocumentSnapshot added with ID: ${doc.id}'));
+
   }
 }

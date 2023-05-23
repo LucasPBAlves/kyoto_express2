@@ -10,10 +10,7 @@ class PagamentosTela extends StatefulWidget {
 }
 
 class PagamentosTelaState extends State<PagamentosTela> {
-  List<Cartao> _cartoes = [
-    Cartao(numero: '1234 5678 9012 3456', validade: '12/23', cvv: '123', nome: ''),
-    Cartao(numero: '9876 5432 1098 7654', validade: '06/25', cvv: '456', nome: ''),
-  ];
+  List<Cartao> _cartoes = [];
 
   List<String> _transactions = [
     'Transaction 1',
@@ -58,7 +55,7 @@ class PagamentosTelaState extends State<PagamentosTela> {
         title: const Text('Meus Cartões', style: TextStyle(color: Colors.black), textAlign: TextAlign.center),
         backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
-        
+
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,

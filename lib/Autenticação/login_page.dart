@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -152,7 +153,8 @@ class LoginPageState extends State<LoginPage> {
       String documentId = docs[0].id;
 
       // Salvar o ID do documento no Shared Preferences
-      await prefs.setString('userDocumentId', documentId);
+      prefs.setString('userDocumentId', documentId);
+
 
       setState(() {
         isLoginConfirmed = true;

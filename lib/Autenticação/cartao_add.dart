@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartaoScreen extends StatefulWidget {
   const CartaoScreen({super.key});
@@ -240,8 +242,12 @@ class CartaoScreenState extends State<CartaoScreen> {
     );
   }
 
-  void _onValidate() {
+  void _onValidate() async{
     if (formKey.currentState!.validate()) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? userDocumentId = prefs.getString('userDocumentId');
+      // Chamando o método setData para adicionar os dados do cartão no Firebase
+      setData(userDocumentId, cardNumber, cardHolderName, expiryDate, cvvCode);
       Navigator.pushNamed(context, "/LojaMainPage");
     } else {
       showDialog(
@@ -266,6 +272,21 @@ class CartaoScreenState extends State<CartaoScreen> {
       cardHolderName = creditCardModel.cardHolderName;
       cvvCode = creditCardModel.cvvCode;
       isCvvFocused = creditCardModel.isCvvFocused;
+    });
+  }
+
+  void setData(String? userID, String cardNumber, String cardHolderName, String expiryDate, String cvvCode) {
+    var db = FirebaseFirestore.instance;
+    // Add a new document with a generated ID
+    db
+        .collection("users")
+        .doc(userID)
+        .collection("cartoes")
+        .add(<String, dynamic>{
+      "Numero": cardNumber,
+      "Nome": cardHolderName,
+      "Validade": expiryDate,
+      "CVV": cvvCode
     });
   }
 }

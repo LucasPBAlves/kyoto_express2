@@ -52,7 +52,7 @@ class LojaMainPageState extends State<LojaMainPage> {
           ),
         ],
         centerTitle: true,
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.location_on, color: Color(0xFF202020)),
