@@ -3,6 +3,7 @@ import 'package:kyoto_express/Menu/chat_tela.dart';
 import 'package:kyoto_express/Menu/cupon_tela.dart';
 import 'package:kyoto_express/Menu/fidelidade_tela.dart';
 import 'package:kyoto_express/Menu/pagamentos_tela.dart';
+import 'package:kyoto_express/buy_tela.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'Autenticação/login_page.dart';
 import 'Autenticação/cadastro_tela.dart';
@@ -13,8 +14,6 @@ import 'Carrinho/carrinho_model.dart';
 import 'Autenticação/verificacao_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
-
 
 
 Future<void> main() async {
@@ -56,6 +55,7 @@ class MyApp extends StatelessWidget{
           "/Cupom": (context) => const CuponTela(),
           "/Fidelidade": (context) => FidelidadeTela(),
           "/Pagamentos": (context) => const PagamentosTela(),
+          "/FinalizarCompra": (context) =>  const CheckoutScreen(),
 
 
         },

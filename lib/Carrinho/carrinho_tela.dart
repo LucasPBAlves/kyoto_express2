@@ -84,7 +84,7 @@ class _CartPageState extends State<CartPage> {
                   width: double.infinity,
                   child: TextButton(
                     child: const Text("Finalizar Compra"),
-                    onPressed: () {},
+                    onPressed: () {Navigator.pushNamed(context, '/FinalizarCompra');},
                   ))
             ])));
   }
