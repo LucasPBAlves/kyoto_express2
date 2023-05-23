@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'Carrinho/carrinho_model.dart';
+import 'Menu/cartao.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  const CheckoutScreen({Key? key}) : super(key: key);
+  final List<Cartao> cartoes; // Lista de cartões
+
+  const CheckoutScreen({Key? key, required this.cartoes}) : super(key: key);
 
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
@@ -12,7 +15,6 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   String _selectedPaymentOption = '';
   final TextEditingController _moneyController = TextEditingController();
-  final List<String> _userCards = []; // Lista de cartões do usuário
 
   @override
   void dispose() {
@@ -69,20 +71,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   trailing: const Icon(Icons.credit_card),
                 ),
                 if (_selectedPaymentOption == 'Cartão')
-                  Column(
-                    children: _userCards.map((card) => ListTile(
-                      leading: Radio<String>(
-                        value: card,
+                  Container(
+                    height: 200, // Defina uma altura fixa para evitar o erro de layout
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: widget.cartoes.map((cartao) => RadioListTile<String>(
+                        value: cartao.numero,
                         groupValue: _selectedPaymentOption,
                         onChanged: (value) {
                           setState(() {
                             _selectedPaymentOption = value!;
                           });
                         },
-                      ),
-                      title: Text(card),
-                      trailing: const Icon(Icons.credit_card),
-                    )).toList(),
+                        title: Text(cartao.numero),
+                        controlAffinity: ListTileControlAffinity.trailing,
+                      )).toList(),
+                    ),
                   ),
                 ListTile(
                   leading: Radio<String>(

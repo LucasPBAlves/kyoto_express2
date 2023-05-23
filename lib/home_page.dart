@@ -54,8 +54,8 @@ class MyApp extends StatelessWidget{
           "/Chat": (context) => ChatTela(),
           "/Cupom": (context) => const CuponTela(),
           "/Fidelidade": (context) => FidelidadeTela(),
-          "/Pagamentos": (context) => const PagamentosTela(),
-          "/FinalizarCompra": (context) =>  const CheckoutScreen(),
+          "/Pagamentos": (context) =>  CartoesPage(),
+          "/FinalizarCompra": (context) =>   const CheckoutScreen(cartoes: [],),
 
 
         },
