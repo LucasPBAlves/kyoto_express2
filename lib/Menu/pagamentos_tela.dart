@@ -130,6 +130,7 @@ class _CartoesPageState extends State<CartoesPage> {
                 }
 
                 final cartao = cartoes[index];
+                final user_id =userDocumentId;
 
                 return InkWell(
                   onTap: () {

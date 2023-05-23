@@ -1,12 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Carrinho/carrinho_model.dart';
 import 'Menu/cartao.dart';
 
+
+
+
 class CheckoutScreen extends StatefulWidget {
   final List<Cartao> cartoes; // Lista de cartões
+  final userDocumentId;
 
-  const CheckoutScreen({Key? key, required this.cartoes}) : super(key: key);
+  const CheckoutScreen({Key? key, required this.cartoes, this.userDocumentId}) : super(key: key);
 
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
@@ -36,12 +42,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Total: R\$ ${ScopedModel.of<CartModel>(context, rebuildOnChange: true).totalCartValue}',
-                  style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                  'Total: R\$ ${ScopedModel
+                      .of<CartModel>(context, rebuildOnChange: true)
+                      .totalCartValue}',
+                  style: const TextStyle(
+                      fontSize: 24.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16.0),
                 const Text(
-                  'Selecione um local de entrega:', // Placeholder para o Place Picker
+                  'Selecione um local de entrega:',
+                  // Placeholder para o Place Picker
                   style: TextStyle(fontSize: 18.0),
                 ),
                 const SizedBox(height: 16.0),
@@ -72,20 +82,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
                 if (_selectedPaymentOption == 'Cartão')
                   Container(
-                    height: 200, // Defina uma altura fixa para evitar o erro de layout
+                    height: 200,
+                    // Defina uma altura fixa para evitar o erro de layout
                     child: ListView(
                       shrinkWrap: true,
-                      children: widget.cartoes.map((cartao) => RadioListTile<String>(
-                        value: cartao.numero,
-                        groupValue: _selectedPaymentOption,
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedPaymentOption = value!;
-                          });
-                        },
-                        title: Text(cartao.numero),
-                        controlAffinity: ListTileControlAffinity.trailing,
-                      )).toList(),
+                      children: widget.cartoes.map((cartao) =>
+                          RadioListTile<String>(
+                            value: cartao.numero,
+                            groupValue: _selectedPaymentOption,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedPaymentOption = value!;
+                              });
+                            },
+                            title: Text(cartao.numero),
+                            controlAffinity: ListTileControlAffinity.trailing,
+                          )).toList(),
                     ),
                   ),
                 ListTile(
@@ -127,7 +139,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
-                    // Lógica para confirmar a compra
+                    setData(userDocumentId as text(), selectedPaymentOption, moneyController)
                   },
                   child: const Text('Confirmar compra'),
                 ),
@@ -137,5 +149,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         ),
       ),
     );
+  }
+
+  void setData(String userDocumentId, String selectedPaymentOption,
+      String moneyController) async {
+    var db = FirebaseFirestore.instance;
+    db
+        .collection("orders")
+        .add(<String, dynamic>{
+      "User": userDocumentId,
+      "Pagamento": selectedPaymentOption,
+      "Preço": moneyController,
+    }).then((DocumentReference doc) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('pedidoId', doc.id);
+    });
   }
 }
