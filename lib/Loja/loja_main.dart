@@ -16,7 +16,7 @@ class LojaMainPageState extends State<LojaMainPage> {
   get padding => null;
   late SharedPreferences prefs;
   late String userDocumentId;
-  late String userEmail;
+  //late String userEmail;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -31,7 +31,7 @@ class LojaMainPageState extends State<LojaMainPage> {
   Future<void> initSharedPreferences() async {
     prefs = await SharedPreferences.getInstance();
     userDocumentId = prefs.getString('userDocumentId') ?? '';
-    userEmail = prefs.getString('userEmail') ?? '';
+    //userEmail = prefs.getString('userEmail') ?? '';
   }
 
   @override
@@ -88,7 +88,7 @@ class LojaMainPageState extends State<LojaMainPage> {
           children: [
             UserAccountsDrawerHeader(
               accountName: Text('Nome do Usuário'),
-              accountEmail: Text(userEmail),
+              accountEmail: Text('Email'),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: const Color(0x00202020).withOpacity(0.8),
                 child: const Icon(Icons.person,
