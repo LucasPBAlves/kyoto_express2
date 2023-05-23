@@ -1,10 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   LoginPageState createState() => LoginPageState();
@@ -44,15 +43,17 @@ class LoginPageState extends State<LoginPage> {
               SizedBox(
                 width: 280.0,
                 child: TextField(
-                    controller: emailController,
+                  controller: emailController,
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: "Email",
                     hintStyle: const TextStyle(color: Colors.white),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          const BorderSide(color: Colors.transparent, width: 0.0),
+                      borderSide: const BorderSide(
+                        color: Colors.transparent,
+                        width: 0.0,
+                      ),
                     ),
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.3),
@@ -73,8 +74,10 @@ class LoginPageState extends State<LoginPage> {
                     fillColor: Colors.white.withOpacity(0.3),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          const BorderSide(color: Colors.transparent, width: 0.0),
+                      borderSide: const BorderSide(
+                        color: Colors.transparent,
+                        width: 0.0,
+                      ),
                     ),
                   ),
                 ),
@@ -96,7 +99,8 @@ class LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.only(left: 45.0),
                     child: Checkbox(
                       value: rememberMe,
-                      fillColor: MaterialStateProperty.all<Color>(Colors.white),
+                      fillColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
                       checkColor: const Color.fromRGBO(178, 33, 36, 1),
                       onChanged: (value) {
                         setState(() {
@@ -113,30 +117,8 @@ class LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20.0),
               MaterialButton(
-                onPressed: () {
-                  if (passwordController.text == "1234") {
-                    setState(() {
-                      isLoginConfirmed = true;
-                    });
-
-                    Navigator.pushNamed(context, "/LojaMainPage");
-                  } else {
-                    setState(() {
-                      isLoginConfirmed = false;
-                    });
-                    showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                                title: const Text("Senha incorreta"),
-                                content:
-                                    const Text("Senha incorreta. Tente Novamente."),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: const Text("Ok"),
-                                  )
-                                ]));
-                  }
+                onPressed: () async {
+                  await getData();
                 },
                 color: Colors.white,
                 child: const Text(
@@ -153,21 +135,48 @@ class LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  Future signIn() async {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(child: CircularProgressIndicator())
-    );
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-    } on FirebaseAuthException catch (e){
-      print(e);
-    }
 
-    Navigator.of("/LojaMainPage" as BuildContext);
+  Future<void> getData() async {
+    var db = FirebaseFirestore.instance;
+    final ref = await db
+        .collection("users")
+        .where("E-mail", isEqualTo: emailController.text)
+        .where("Senha", isEqualTo: passwordController.text)
+        .get();
+    final docs = ref.docs;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (docs.isNotEmpty) {
+      // Obter o ID do documento
+      String documentId = docs[0].id;
+
+      // Salvar o ID do documento no Shared Preferences
+      await prefs.setString('userDocumentId', documentId);
+
+      setState(() {
+        isLoginConfirmed = true;
+      });
+      Navigator.of(context).pushNamed("/LojaMainPage");
+    } else {
+      setState(() {
+        isLoginConfirmed = false;
+      });
+      showDialog(
+        context: context,
+        builder: (_) =>
+            AlertDialog(
+              title: const Text("Credenciais inválidas"),
+              content: const Text(
+                  "Email ou senha incorretos. Tente novamente."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Ok"),
+                ),
+              ],
+            ),
+      );
+    }
   }
 }
