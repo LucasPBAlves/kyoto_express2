@@ -3,7 +3,7 @@ import 'package:kyoto_express/Menu/chat_tela.dart';
 import 'package:kyoto_express/Menu/cupon_tela.dart';
 import 'package:kyoto_express/Menu/fidelidade_tela.dart';
 import 'package:kyoto_express/Menu/pagamentos_tela.dart';
-import 'package:kyoto_express/buy_tela.dart';
+import 'package:kyoto_express/Carrinho/buy_tela.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'Autenticação/login_page.dart';
 import 'Autenticação/cadastro_tela.dart';

@@ -152,8 +152,15 @@ class LoginPageState extends State<LoginPage> {
       // Obter o ID do documento
       String documentId = docs[0].id;
 
+     /* final data = docs.forEach((element) {
+        if (docs['Nome'] ?? '' exists){
+          return docs['Nome'] ?? '';
+        }
+      });*/
+
       // Salvar o ID do documento no Shared Preferences
       prefs.setString('userDocumentId', documentId);
+      //prefs.setString('userEmail', email);
 
 
       setState(() {

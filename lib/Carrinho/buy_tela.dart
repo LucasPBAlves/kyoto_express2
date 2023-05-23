@@ -2,25 +2,64 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Carrinho/carrinho_model.dart';
-import 'Menu/cartao.dart';
+import 'carrinho_model.dart';
+import 'package:kyoto_express/Menu/pagamentos_tela.dart';
 
 
 
 
 class CheckoutScreen extends StatefulWidget {
   final List<Cartao> cartoes; // Lista de cartões
-  final userDocumentId;
 
-  const CheckoutScreen({Key? key, required this.cartoes, this.userDocumentId}) : super(key: key);
+  const CheckoutScreen({Key? key, required this.cartoes}) : super(key: key);
 
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  late SharedPreferences prefs;
+  late String userDocumentId;
   String _selectedPaymentOption = '';
   final TextEditingController _moneyController = TextEditingController();
+
+
+  List<Cartao> cartoes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    initSharedPreferences();
+  }
+
+  Future<void> initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    userDocumentId = prefs.getString('userDocumentId') ?? '';
+
+    fetchCartoes();
+  }
+
+  Future<void> fetchCartoes() async {
+    final cartoesSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userDocumentId)
+        .collection('cartoes')
+        .get();
+
+    cartoes = cartoesSnapshot.docs.map((doc) {
+      final data = doc.data();
+      return Cartao(
+        id: doc.id,
+        nome: doc['Nome'] ?? '',
+        numero: doc['Numero'] ?? '',
+        validade: doc['Validade'] ?? '',
+        cvv: doc['CVV'] ?? '',
+      );
+    }).toList();
+
+
+    setState(() {});
+  }
 
   @override
   void dispose() {
@@ -138,8 +177,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: () {
-                    setData(userDocumentId as text(), selectedPaymentOption, moneyController)
+                  onPressed: (){
+                    setData(userDocumentId as String, _selectedPaymentOption, ScopedModel.of<CartModel>(context, rebuildOnChange: true).totalCartValue);
                   },
                   child: const Text('Confirmar compra'),
                 ),
@@ -152,14 +191,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void setData(String userDocumentId, String selectedPaymentOption,
-      String moneyController) async {
+      double totalCartValue) async {
     var db = FirebaseFirestore.instance;
     db
         .collection("orders")
         .add(<String, dynamic>{
       "User": userDocumentId,
       "Pagamento": selectedPaymentOption,
-      "Preço": moneyController,
+      "Preço": totalCartValue,
     }).then((DocumentReference doc) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('pedidoId', doc.id);

@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Carrinho/carrinho_model.dart';
 import 'product_list.dart';
 
@@ -12,6 +14,9 @@ class LojaMainPage extends StatefulWidget {
 
 class LojaMainPageState extends State<LojaMainPage> {
   get padding => null;
+  late SharedPreferences prefs;
+  late String userDocumentId;
+  late String userEmail;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -20,6 +25,13 @@ class LojaMainPageState extends State<LojaMainPage> {
   @override
   void initState() {
     super.initState();
+    initSharedPreferences();
+  }
+
+  Future<void> initSharedPreferences() async {
+    prefs = await SharedPreferences.getInstance();
+    userDocumentId = prefs.getString('userDocumentId') ?? '';
+    userEmail = prefs.getString('userEmail') ?? '';
   }
 
   @override
@@ -75,8 +87,8 @@ class LojaMainPageState extends State<LojaMainPage> {
 
           children: [
             UserAccountsDrawerHeader(
-              accountName: const Text('Nome do Usuário'),
-              accountEmail: const Text('email@example.com'),
+              accountName: Text('Nome do Usuário'),
+              accountEmail: Text(userEmail),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: const Color(0x00202020).withOpacity(0.8),
                 child: const Icon(Icons.person,
