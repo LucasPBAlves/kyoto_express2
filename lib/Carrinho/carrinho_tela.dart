@@ -80,12 +80,16 @@ class _CartPageState extends State<CartPage> {
                     style: const TextStyle(
                         fontSize: 24.0, fontWeight: FontWeight.bold),
                   )),
-              SizedBox(
-                  width: double.infinity,
-                  child: TextButton(
-                    child: const Text("Finalizar Compra"),
-                    onPressed: () {Navigator.pushNamed(context, '/FinalizarCompra');},
-                  ))
+             SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  child: const Text("Finalizar Compra"),
+                  onPressed: () {
+                    ScopedModel.of<CartModel>(context).clearCart();
+                    Navigator.pushNamed(context, '/FinalizarCompra');
+                  },
+                ),
+              )
             ])));
   }
 }
