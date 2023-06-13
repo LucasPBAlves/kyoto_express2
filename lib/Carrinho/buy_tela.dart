@@ -158,6 +158,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
+
+                    Navigator.pushNamed(context, '/Entregador');
                     setData(
                       userDocumentId,
                       _selectedPaymentOption,
