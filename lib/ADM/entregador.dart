@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -36,9 +35,9 @@ class _LatLngScreenPointTestPageState extends State<LatLngScreenPointTestPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('LatLng To Screen Point')),
-
-        body: Stack(children: [
+      appBar: AppBar(title: const Text('LatLng To Screen Point')),
+      body: Stack(
+        children: [
           Padding(
             padding: const EdgeInsets.all(8),
             child: FlutterMap(
@@ -63,11 +62,32 @@ class _LatLngScreenPointTestPageState extends State<LatLngScreenPointTestPage> {
             ),
           ),
           Positioned(
-              left: _textPos.x.toDouble(),
-              top: _textPos.y.toDouble(),
-              width: 20,
-              height: 20,
-              child: const FlutterLogo())
-        ]));
+            left: _textPos.x.toDouble(),
+            top: _textPos.y.toDouble(),
+            width: 20,
+            height: 20,
+            child: const FlutterLogo(),
+          ),
+          Positioned(
+            bottom: 16,
+            left: 16,
+            right: 16,
+            child: TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/LojaMainPage');
+              },
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              ),
+              child: const Text(
+                'Confirmar entrega',
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
