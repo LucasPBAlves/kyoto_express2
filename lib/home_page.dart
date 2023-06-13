@@ -14,6 +14,7 @@ import 'Carrinho/carrinho_model.dart';
 import 'Autenticação/verificacao_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'ADM/restaurante_pedido.dart';
 
 
 Future<void> main() async {
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget{
           "/Fidelidade": (context) => FidelidadeTela(),
           "/Pagamentos": (context) =>  CartoesPage(),
           "/FinalizarCompra": (context) =>   const CheckoutScreen(cartoes: [],),
+          "/RestaurantePedido": (context) =>  OrdersManagement(),
 
 
         },

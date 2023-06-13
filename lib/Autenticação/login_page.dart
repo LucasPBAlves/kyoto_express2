@@ -166,7 +166,7 @@ class LoginPageState extends State<LoginPage> {
       setState(() {
         isLoginConfirmed = true;
       });
-      Navigator.of(context).pushNamed("/LojaMainPage");
+      Navigator.of(context).pushNamed("/RestaurantePedido");
     } else {
       setState(() {
         isLoginConfirmed = false;
