@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kyoto_express/ADM/entregador.dart';
 import 'package:kyoto_express/Menu/chat_tela.dart';
 import 'package:kyoto_express/Menu/cupon_tela.dart';
@@ -18,7 +19,6 @@ import 'firebase_options.dart';
 import 'ADM/restaurante_pedido.dart';
 import 'ADM/entregador.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -29,52 +29,69 @@ Future<void> main() async {
   ));
 }
 
-
-class MyApp extends StatelessWidget{
-
+class MyApp extends StatelessWidget {
   final CartModel model;
 
   const MyApp({Key? key, required this.model}) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return ScopedModel<CartModel>(
-      model: model,
-      child:MaterialApp(
-        home: const Home(),
-        title: 'Kyoto Express',
-        initialRoute: "/Home",
-        routes: {
-          "/Home": (context) => const Home(),
-          "/login": (context) => const LoginPage(),
-          "/LojaMainPage": (context) => const LojaMainPage(),
-          "/Cadastro": (context) => const CadastroPage(),
-          '/Carrinho': (context) => const CartPage(),
-          "/Verificar": (context) => const Verification(),
-          "/Cartao": (context) => const CartaoScreen(),
-          "/Chat": (context) => ChatTela(),
-          "/Cupom": (context) => const CuponTela(),
-          "/Fidelidade": (context) => FidelidadeTela(),
-          "/Pagamentos": (context) =>  CartoesPage(),
-          "/FinalizarCompra": (context) =>    const CheckoutScreen(cartoes: [], ),
-          "/RestaurantePedido": (context) =>  const OrdersManagement(),
-          "/Entregador": (context) =>   LatLngScreenPointTestPage(),
+        model: model,
+        child: MaterialApp(
+          theme: ThemeData(
+            textButtonTheme: TextButtonThemeData(
+                style: ButtonStyle(
+              foregroundColor:
+                  MaterialStateProperty.all(const Color(0xFFede6dd)),
+            )),
 
-        },
-      ));
+            primaryColor: const Color(0xFFb22124), // Cor primária personalizada
+            backgroundColor:
+                const Color(0xFFede6dd), // Cor de fundo personalizada
+            textTheme: GoogleFonts.latoTextTheme(
+              Theme.of(context).textTheme,
+            ),
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Color(0xFFb22124), // Cor da AppBar personalizada
+            ),
+            buttonTheme: const ButtonThemeData(
+              buttonColor: Color(0xFFb22124), // Cor dos botões personalizada
+              // Outras propriedades dos botões, se necessário
+            ),
+          ),
+          home: const Home(),
+          title: 'Kyoto Express',
+          initialRoute: "/Home",
+          routes: {
+            "/Home": (context) => const Home(),
+            "/login": (context) => const LoginPage(),
+            "/LojaMainPage": (context) => const LojaMainPage(),
+            "/Cadastro": (context) => const CadastroPage(),
+            '/Carrinho': (context) => const CartPage(),
+            "/Verificar": (context) => const Verification(),
+            "/Cartao": (context) => const CartaoScreen(),
+            "/Chat": (context) => ChatTela(),
+            "/Cupom": (context) => const CuponTela(),
+            "/Fidelidade": (context) => FidelidadeTela(),
+            "/Pagamentos": (context) => CartoesPage(),
+            "/FinalizarCompra": (context) => const CheckoutScreen(
+                  cartoes: [],
+                ),
+            "/RestaurantePedido": (context) => const OrdersManagement(),
+            "/Entregador": (context) => const LatLngScreenPointTestPage(),
+          },
+        ));
   }
 }
 
 class Home extends StatelessWidget {
   const Home({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Stack(
         children: [
           Positioned.fill(
