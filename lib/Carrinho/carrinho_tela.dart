@@ -9,8 +9,12 @@ class CartPage extends StatefulWidget {
   }
 }
 class _CartPageState extends State<CartPage> {
+
   @override
   Widget build(BuildContext context) {
+    String dataS= ScopedModel.of<CartModel>(context,
+        rebuildOnChange: true)
+        .cartItens;
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(

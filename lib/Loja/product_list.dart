@@ -451,3 +451,4 @@ class SelectedProductsPage extends StatelessWidget {
     throw UnimplementedError();
   }
 }
+

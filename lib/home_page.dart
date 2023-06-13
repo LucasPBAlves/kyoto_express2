@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kyoto_express/ADM/entregador.dart';
 import 'package:kyoto_express/Menu/chat_tela.dart';
 import 'package:kyoto_express/Menu/cupon_tela.dart';
 import 'package:kyoto_express/Menu/fidelidade_tela.dart';
@@ -15,6 +16,7 @@ import 'Autenticação/verificacao_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'ADM/restaurante_pedido.dart';
+import 'ADM/entregador.dart';
 
 
 Future<void> main() async {
@@ -58,7 +60,7 @@ class MyApp extends StatelessWidget{
           "/Pagamentos": (context) =>  CartoesPage(),
           "/FinalizarCompra": (context) =>    const CheckoutScreen(cartoes: [], ),
           "/RestaurantePedido": (context) =>  const OrdersManagement(),
-
+          "/Entregador": (context) =>   LatLngScreenPointTestPage(),
 
         },
       ));

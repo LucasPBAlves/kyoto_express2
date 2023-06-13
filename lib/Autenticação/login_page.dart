@@ -168,7 +168,7 @@ class LoginPageState extends State<LoginPage> {
         Navigator.of(context).pushNamed("/RestaurantePedido");
       } else if (isEntregador) {
         // Navegar para a tela "TelaEntregador"
-        Navigator.of(context).pushNamed("/RestaurantePedido");
+        Navigator.of(context).pushNamed("/Entregador");
       } else {
         // Navegar para a tela padrão
         setState(() {
