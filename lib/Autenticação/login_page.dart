@@ -161,12 +161,21 @@ class LoginPageState extends State<LoginPage> {
       // Salvar o ID do documento no Shared Preferences
       prefs.setString('userDocumentId', documentId);
       //prefs.setString('userEmail', email);
-
-
-      setState(() {
-        isLoginConfirmed = true;
-      });
-      Navigator.of(context).pushNamed("/RestaurantePedido");
+      bool isAdmin = docs[0].get('adm') ?? false;
+      bool isEntregador = docs[0].get('entregador') ?? false;
+      if (isAdmin) {
+        // Navegar para a tela "TelaAdm"
+        Navigator.of(context).pushNamed("/RestaurantePedido");
+      } else if (isEntregador) {
+        // Navegar para a tela "TelaEntregador"
+        Navigator.of(context).pushNamed("/RestaurantePedido");
+      } else {
+        // Navegar para a tela padrão
+        setState(() {
+          isLoginConfirmed = true;
+        });
+        Navigator.of(context).pushNamed("/LojaMainPage");
+      }
     } else {
       setState(() {
         isLoginConfirmed = false;

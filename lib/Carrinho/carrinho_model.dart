@@ -3,6 +3,7 @@ import 'package:kyoto_express/Loja/product_list.dart';
 class CartModel extends Model {
   List<Product> cart = [];
   double totalCartValue = 0;
+  String cartItens= '';
 
   int get total => cart.length;
 
@@ -51,4 +52,16 @@ class CartModel extends Model {
       totalCartValue += f.price * f.qty;
     }
   }
+  void stringCart() {
+    var cartItens= '';
+    for (var f in cart) {
+      cartItens += '${f.title} (${f.qty}), ';
+    }
+
+    // Remover a vírgula extra no final, se houver itens no carrinho
+    if (cartItens.isNotEmpty) {
+      cartItens = cartItens.substring(0, cartItens.length - 2);
+    }
+  }
 }
+

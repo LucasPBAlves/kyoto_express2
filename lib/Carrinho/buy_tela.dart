@@ -5,9 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'carrinho_model.dart';
 import 'package:kyoto_express/Menu/pagamentos_tela.dart';
 
-
-
-
 class CheckoutScreen extends StatefulWidget {
   final List<Cartao> cartoes; // Lista de cartões
 
@@ -21,8 +18,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   late SharedPreferences prefs;
   late String userDocumentId;
   String _selectedPaymentOption = '';
-  final TextEditingController _moneyController = TextEditingController();
+  late String dataS;
 
+  final TextEditingController _moneyController = TextEditingController();
 
   List<Cartao> cartoes = [];
 
@@ -57,7 +55,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       );
     }).toList();
 
-
     setState(() {});
   }
 
@@ -69,7 +66,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    dataS = ScopedModel.of<CartModel>(context, rebuildOnChange: true).cartItens;
     return Scaffold(
+
       appBar: AppBar(
         title: const Text('Checkout'),
       ),
@@ -106,9 +105,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   style: TextStyle(fontSize: 18.0),
                 ),
                 const SizedBox(height: 16.0),
-                ListTile(
+                ...cartoes.map((cartao) => ListTile(
                   leading: Radio<String>(
-                    value: 'Cartão',
+                    value: cartao.numero,
                     groupValue: _selectedPaymentOption,
                     onChanged: (value) {
                       setState(() {
@@ -116,29 +115,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       });
                     },
                   ),
-                  title: const Text('Cartão'),
+                  title: Text('Cartão ${getMaskedCardNumber(cartao.numero)}'),
+
                   trailing: const Icon(Icons.credit_card),
-                ),
-                if (_selectedPaymentOption == 'Cartão')
-                  Container(
-                    height: 200,
-                    // Defina uma altura fixa para evitar o erro de layout
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: widget.cartoes.map((cartao) =>
-                          RadioListTile<String>(
-                            value: cartao.numero,
-                            groupValue: _selectedPaymentOption,
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedPaymentOption = value!;
-                              });
-                            },
-                            title: Text(cartao.numero),
-                            controlAffinity: ListTileControlAffinity.trailing,
-                          )).toList(),
-                    ),
-                  ),
+                )),
                 ListTile(
                   leading: Radio<String>(
                     value: 'Dinheiro',
@@ -177,8 +157,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: (){
-                    setData(userDocumentId as String, _selectedPaymentOption, ScopedModel.of<CartModel>(context, rebuildOnChange: true).totalCartValue);
+                  onPressed: () {
+                    setData(
+                      userDocumentId,
+                      _selectedPaymentOption,
+                      ScopedModel.of<CartModel>(context, rebuildOnChange: true)
+                          .totalCartValue,
+
+                    );
                   },
                   child: const Text('Confirmar compra'),
                 ),
@@ -193,15 +179,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   void setData(String userDocumentId, String selectedPaymentOption,
       double totalCartValue) async {
     var db = FirebaseFirestore.instance;
-    db
-        .collection("orders")
-        .add(<String, dynamic>{
+    db.collection("orders").add(<String, dynamic>{
       "User": userDocumentId,
       "Pagamento": selectedPaymentOption,
       "Preço": totalCartValue,
+      "feito": false,
+      "entregue": false,
+      "itens": dataS,
+
     }).then((DocumentReference doc) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('pedidoId', doc.id);
     });
   }
-}
+
+  String getMaskedCardNumber(String cardNumber) {
+    if (cardNumber.length <= 4) {
+      return cardNumber;
+    } else {
+      String maskedDigits = '*' * (cardNumber.length - 4);
+      String lastFourDigits = cardNumber.substring(cardNumber.length - 4);
+      return maskedDigits + lastFourDigits;
+    }
+  }}

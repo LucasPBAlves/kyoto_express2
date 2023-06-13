@@ -77,6 +77,7 @@ class _CartPageState extends State<CartPage> {
                     "Total: R\$ ${ScopedModel.of<CartModel>(context,
                         rebuildOnChange: true)
                         .totalCartValue}",
+
                     style: const TextStyle(
                         fontSize: 24.0, fontWeight: FontWeight.bold),
                   )),
@@ -85,7 +86,7 @@ class _CartPageState extends State<CartPage> {
                 child: TextButton(
                   child: const Text("Finalizar Compra"),
                   onPressed: () {
-                    ScopedModel.of<CartModel>(context).clearCart();
+                    //ScopedModel.of<CartModel>(context).clearCart();
                     Navigator.pushNamed(context, '/FinalizarCompra');
                   },
                 ),

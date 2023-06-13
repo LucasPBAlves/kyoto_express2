@@ -56,8 +56,8 @@ class MyApp extends StatelessWidget{
           "/Cupom": (context) => const CuponTela(),
           "/Fidelidade": (context) => FidelidadeTela(),
           "/Pagamentos": (context) =>  CartoesPage(),
-          "/FinalizarCompra": (context) =>   const CheckoutScreen(cartoes: [],),
-          "/RestaurantePedido": (context) =>  OrdersManagement(),
+          "/FinalizarCompra": (context) =>    const CheckoutScreen(cartoes: [], ),
+          "/RestaurantePedido": (context) =>  const OrdersManagement(),
 
 
         },

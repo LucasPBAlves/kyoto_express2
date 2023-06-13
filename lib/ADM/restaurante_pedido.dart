@@ -2,54 +2,73 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OrdersManagement extends StatelessWidget {
-  const OrdersManagement({super.key});
+  const OrdersManagement({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Orders Management'),
+        title: const Text('Gerenciamento de Pedidos'),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('orders')
-            .where('feito', isEqualTo: 0)
+            .where('feito', isEqualTo: false)
             .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Text('Erro ao carregar os pedidos');
-          }
+          if (snapshot.hasData) {
+            final orders = snapshot.data!.docs;
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          }
+            return ListView.builder(
+              itemCount: orders.length,
+              itemBuilder: (context, index) {
+                final order = orders[index];
+                final orderId = order.id;
+                final orderData = order.data() as Map<String, dynamic>;
 
-          List<QueryDocumentSnapshot> orders =
-          snapshot.data!.docs.cast<QueryDocumentSnapshot>();
+                return ListTile(
+                  title: Text('Pedido ID: $orderId'),
+                  subtitle: Text('Feito: ${orderData['feito']}'),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Detalhes do Pedido'),
+                          content: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Pagamento: ${orderData['Pagamento']}'),
+                              Text('Preço: ${orderData['Preço']}'),
+                            ],
+                          ),
+                          actions: [
+                            ElevatedButton(
+                              onPressed: () {
+                                // Lógica para marcar o pedido como feito
+                                FirebaseFirestore.instance
+                                    .collection('orders')
+                                    .doc(orderId)
+                                    .update({'feito': true});
 
-          return ListView.builder(
-            itemCount: orders.length,
-            itemBuilder: (context, index) {
-              QueryDocumentSnapshot order = orders[index];
-              List<dynamic> items = order['itens'];
-              double price = order['preço'];
-
-              return ListTile(
-                title: Text('Itens: ${items.join(', ')}'),
-                subtitle: Text('Preço: R\$ $price'),
-                trailing: ElevatedButton(
-                  onPressed: () {
-                    // Alterar o campo "feito" para 1
-                    FirebaseFirestore.instance
-                        .collection('orders')
-                        .doc(order.id)
-                        .update({'feito': 1});
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Marcar como Feito'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   },
-                  child: const Text('Remover'),
-                ),
-              );
-            },
-          );
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text('Erro ao carregar os pedidos.');
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
         },
       ),
     );

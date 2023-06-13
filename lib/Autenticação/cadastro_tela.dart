@@ -208,6 +208,8 @@ class CadastroPageState extends State<CadastroPage> {
       "Nome": nameController,
       "Senha": passwordController,
       "Telefone": phoneController,
+      "adm": false,
+      "entregador": false,
     }).then((DocumentReference doc) async{
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('userDocumentId', doc.id);
